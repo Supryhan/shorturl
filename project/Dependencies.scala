@@ -6,7 +6,7 @@ object Dependencies {
     val cats = "2.13.0"
     val catsEffect = "3.6-28f8f29"
     val http4s = "1.0.0-M44"
-    val circe = "0.14.10"
+    val circe = "0.14.9"
     val log4cats = "2.7.0"
     val logback = "1.5.16"
     val newtype = "0.4.4"
@@ -28,7 +28,10 @@ object Dependencies {
     val http4sDsl = http4s("dsl")
     val http4sCirce = http4s("circe")
 
+    val circeCore = circe("core")
     val circeGeneric = circe("generic")
+    val circeParser = circe("parser")
+    val circeRefined = circe("refined")
 
     val refinedCore = "eu.timepit" %% "refined" % Ver.refined
     val refinedCats = "eu.timepit" %% "refined-cats" % Ver.refined
