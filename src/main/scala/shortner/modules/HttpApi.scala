@@ -8,7 +8,7 @@ import org.http4s.server.middleware.*
 import org.http4s.{Http, HttpApp, HttpRoutes, Request, Response}
 import org.typelevel.log4cats.LoggerFactory
 import org.typelevel.log4cats.slf4j.Slf4jFactory
-import shortner.apphttp.routes.{LocatorRoutes, version}
+import shortner.http.routes.{LocatorRoutes, version}
 
 import scala.concurrent.duration.*
 
@@ -29,7 +29,7 @@ sealed abstract class HttpApi[F[_] : Async] private(
 
   private val locatorRoutes = LocatorRoutes[F](services.locators).routes
 
-  // Combining all the apphttp routes
+  // Combining all the http routes
   private val openRoutes: HttpRoutes[F] = locatorRoutes
   //    healthRoutes <+> itemRoutes <+> brandRoutes <+>
   //      categoryRoutes <+> loginRoutes <+> userRoutes <+>
@@ -45,9 +45,9 @@ sealed abstract class HttpApi[F[_] : Async] private(
       AutoSlash(http) }
     f
 //  } andThen {
-//    val f: HttpRoutes[F] => F[Http[[_$7] =>> OptionT[F, _$7], F]] = { (apphttp: HttpRoutes[F]) =>
+//    val f: HttpRoutes[F] => F[Http[[_$7] =>> OptionT[F, _$7], F]] = { (http: HttpRoutes[F]) =>
 //    {
-//      val cors: F[Http[[_$7] =>> OptionT[F, _$7], F]] = CORS.policy(apphttp)
+//      val cors: F[Http[[_$7] =>> OptionT[F, _$7], F]] = CORS.policy(http)
 //      cors
 //    }
 //    }
@@ -62,11 +62,11 @@ sealed abstract class HttpApi[F[_] : Async] private(
 //  import cats.Monad
 //  import org.http4s.HttpRoutes
 //
-//  def corsMiddleware[F[_]: Monad](apphttp: HttpRoutes[F]): F[HttpRoutes[F]] =
-//    CORS.policy(apphttp)
+//  def corsMiddleware[F[_]: Monad](http: HttpRoutes[F]): F[HttpRoutes[F]] =
+//    CORS.policy(http)
 //
-//  private val middleware: HttpRoutes[F] => F[HttpRoutes[F]] = apphttp =>
-//    corsMiddleware(apphttp) flatMap { corsHttp =>
+//  private val middleware: HttpRoutes[F] => F[HttpRoutes[F]] = http =>
+//    corsMiddleware(http) flatMap { corsHttp =>
 //      // Припускаючи, що AutoSlash та Timeout повертають HttpRoutes[F]
 //      val withAutoSlash = AutoSlash(corsHttp)
 //      val withTimeout = Timeout(60.seconds)(withAutoSlash)

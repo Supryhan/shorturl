@@ -1,4 +1,4 @@
-package shortner.apphttp.routes
+package shortner.http.routes
 
 object version {
   val v1 = "/v1"

@@ -11,6 +11,15 @@ object Dependencies {
     val logback = "1.5.16"
     val newtype = "0.4.4"
     val refined = "0.9.29"
+//    val doobie = "1.0.0-RC7"
+
+//    val skunk = "1.1.0-M3"
+    val skunk = "0.6.3"
+    val natchez = "0.3.7"
+
+    val fs2 = "3.12.0-RC1"
+
+//    val postgre = "42.7.5"
     val organizeImports = "0.6.0"
     val scalameta = "1.0.0"
   }
@@ -38,6 +47,15 @@ object Dependencies {
 
     val log4catsCore = "org.typelevel" %% "log4cats-core" % Ver.log4cats
     val log4catsSlf4j = "org.typelevel" %% "log4cats-slf4j" % Ver.log4cats
+
+
+    val skunkCore = "org.tpolecat" %% "skunk-core" % Ver.skunk
+    val skunkCirce = "org.tpolecat" %% "skunk-circe" % Ver.skunk
+    val natchezCore = "org.tpolecat" %% "natchez-core" % Ver.natchez
+
+    val fs2 = "co.fs2" %% "fs2-core" % Ver.fs2
+
+//    val postgreSQL = "org.postgresql" % "postgresql" % Ver.postgre
 
     val newtype = "io.estatico" %% "newtype" % Ver.newtype
 

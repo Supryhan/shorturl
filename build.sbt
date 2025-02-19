@@ -10,16 +10,13 @@ ThisBuild / evictionWarningOptions in update := EvictionWarningOptions.full
 
 ThisBuild / scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-feature", "-unchecked")
 
-
-resolvers ++= Resolver.sonatypeOssRepos("snapshots")
-resolvers ++= Resolver.sonatypeOssRepos("releases")
-
 lazy val root = project
   .in(file("."))
   .settings(
     name := "urlshorter",
     scalacOptions ++= List("-Ymacro-annotations", "-Yrangepos", "-Wconf:cat=unused:info"),
-    resolvers += Resolver.sonatypeRepo("snapshots"),
+    resolvers ++= Resolver.sonatypeOssRepos("snapshots"),
+    resolvers ++= Resolver.sonatypeOssRepos("releases"),
     libraryDependencies ++= Seq(
       Libraries.cats,
       Libraries.catsEffect,
@@ -33,10 +30,18 @@ lazy val root = project
       Libraries.http4sCirce,
       Libraries.log4catsCore,
       Libraries.log4catsSlf4j,
+      
+//      Libraries.doobieCore,
+//      Libraries.doobieHikari,
+//      Libraries.postgreSQL,
+      
+      Libraries.skunkCore,
+      Libraries.skunkCirce,
+      Libraries.natchezCore,
+      
+      Libraries.fs2,
+      
       Libraries.logback % Runtime,
-      //          Libraries.newtype,
-      //          Libraries.refinedCore,
-      //          Libraries.refinedCats,
       Libraries.scalameta,
     )
 

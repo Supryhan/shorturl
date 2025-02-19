@@ -29,3 +29,8 @@ fetch('http://localhost:8080/v1/api/decode/', {
 .then(response => response.text())
 .then(text => console.log(text))
 .catch(error => console.error('Error:', error));
+
+docker-compose up -d
+
+docker-compose down
+
