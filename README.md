@@ -76,9 +76,9 @@ fetch('http://localhost:8080/v1/api/decode/', {
 
 this downloads and starts postgres and admin/page docker containers
 
-To login admin page use ```login:password``` -- ```admin@admin.com:admin```
+To login admin page:```http://localhost:5050/login```, use ```login:password``` -- ```admin@admin.com:admin```
 
-Please, create two tables `locators` and `ref` (use scripts from file `tables.sql`) and then insert init record into table `ref`. 
+Please, create two tables `locators` and `ref` in DB named `mydatabase` (use scripts from file `tables.sql`) and then insert init record into table `ref` (see scripts). 
 
 ### To stop DB run command:
 
