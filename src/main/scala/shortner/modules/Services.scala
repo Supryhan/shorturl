@@ -1,12 +1,13 @@
 package shortner.modules
 
-import cats.effect.{Resource, Temporal}
+import cats.effect.{Ref, Resource, Temporal}
 import shortner.services.Locators
 import skunk.Session
 
 object Services {
-  def make[F[_] : Temporal](postgres: Resource[F, Session[F]]): Services[F] = {
-    val _locators = Locators.make(postgres)
+  def make[F[_] : Temporal](postgres: Resource[F, Session[F]],
+                            counterRef: Ref[F, Long]): Services[F] = {
+    val _locators = Locators.make(postgres, counterRef)
     new Services[F](_locators) {}
   }
 }

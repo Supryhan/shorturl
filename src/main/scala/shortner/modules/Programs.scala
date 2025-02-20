@@ -8,4 +8,4 @@ object Programs {
     new Programs[F](services) {}
 }
 
-sealed abstract class Programs[F[_] : Logger : Temporal] private(services: Services[F]) {}
+sealed abstract class Programs[F[_] : Logger : Temporal] private(val services: Services[F]) {}

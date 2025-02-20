@@ -1,7 +1,7 @@
 package shortner.appresources
 
 import cats.effect.std.Console
-import cats.effect.{Resource, Temporal}
+import cats.effect.{Ref, Resource, Temporal}
 import cats.syntax.all.*
 import fs2.io.net.Network
 import skunk.Session
@@ -10,8 +10,10 @@ import skunk.codec.text.*
 import skunk.implicits.*
 import natchez.Trace.Implicits.noop
 import org.typelevel.log4cats.Logger
+import skunk.codec.all.int8
 
-sealed abstract class ApplicationResources[F[_]](val postgres: Resource[F, Session[F]]) {
+sealed abstract class ApplicationResources[F[_]](val postgres: Resource[F, Session[F]],
+                                                 val counterRef: Ref[F, Long]) {
 }
 
 object ApplicationResources {
@@ -36,8 +38,17 @@ object ApplicationResources {
           max = 2
         ).evalTap(checkPostgresConnection)
 
-    mkPostgreSqlResource()
-      .map(pg => new ApplicationResources[F](pg) {})
+    def initializeCounter(postgres: Resource[F, Session[F]]): F[Ref[F, Long]] = {
+      postgres.use { session =>
+        val fetchCounterQuery = sql"SELECT counter FROM ref".query(int8)
+        session.option(fetchCounterQuery).map(_.getOrElse(0L)).flatMap(Ref[F].of)
+      }
+    }
+
+    mkPostgreSqlResource().evalMap { session =>
+      initializeCounter(session).map { ref =>
+        new ApplicationResources[F](session, ref) {}
+      }
+    }
   }
 }
-

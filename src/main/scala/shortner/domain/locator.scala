@@ -4,5 +4,5 @@ import java.util.UUID
 
 object locator {
 
-  case class Locator(id: UUID, shortName: String, originalName: String)
+  case class Locator(id: UUID, encoded: Long, originalName: String)
 }

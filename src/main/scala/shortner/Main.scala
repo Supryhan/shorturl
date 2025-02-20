@@ -24,7 +24,7 @@ object Main extends IOApp.Simple {
             .evalMap {
               res => {
                 val aa: HttpApp[IO] = {
-                  val services = Services.make[IO](res.postgres)
+                  val services = Services.make[IO](res.postgres, res.counterRef)
                   val programs = Programs.make[IO](services)
                   val api = HttpApi.make[IO](services, programs)
                   val a: HttpApp[IO] = api.httpApp

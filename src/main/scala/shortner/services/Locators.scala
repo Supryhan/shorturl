@@ -1,6 +1,6 @@
 package shortner.services
 
-import cats.effect.{Concurrent, Resource}
+import cats.effect.{Concurrent, Ref, Resource}
 import cats.syntax.all.*
 import shortner.domain.locator.Locator
 import shortner.services.LocatorSQL.{insert, selectBy}
@@ -14,44 +14,40 @@ trait Locators[F[_]] {
 
   def create(url: String): F[Locator]
 
-  def findBy(shortName: String): F[Option[Locator]]
+  def findBy(shortName: Long): F[Option[Locator]]
 
 }
 
 object Locators {
-  def make[F[_] : Concurrent](postgres: Resource[F, Session[F]]): Locators[F] =
+  def make[F[_] : Concurrent](postgres: Resource[F, Session[F]],
+                              counterRef: Ref[F, Long]): Locators[F] =
     new Locators[F] {
-      //      def createExample(url: String): F[Locator] = {
-      //        val locatorId: UUID = UUID.randomUUID()
-      //        val example: Locator = Locator(locatorId, "short", "original")
-      //        postgres.use { (session: Session[F]) => {
-      //          val e: Resource[F, PreparedCommand[F, Locator]] = session.prepareR(insert)
-      //          e
-      //        }.use { (command: PreparedCommand[F, Locator]) =>
-      //          val e: F[Locator] = {
-      //            val e1: F[Completion] = command.execute(example)
-      //            e1
-      //          }.as(example)
-      //          e
-      //        }
-      //        }
-      //      }
+
       def create(url: String): F[Locator] = {
-        val locatorId: UUID = UUID.randomUUID()
-        val example: Locator = Locator(locatorId, s"short-$url", url)
-        postgres.use { (session: Session[F]) =>
+        postgres.use { session =>
           for {
-            command <- session.prepare(insert)
-            rowCount <- command.execute(example)
-          } yield example
+            preparedInsert <- session.prepare(insert)
+            updateCounter <- session.prepare(sql"UPDATE ref SET counter = $int8".command)
+            locator <- session.transaction.use { tx =>
+              for {
+                currentCount <- counterRef.get
+                encoded = currentCount + 1L
+                locatorId = UUID.randomUUID()
+                locator = Locator(locatorId, encoded, url)
+                _ <- preparedInsert.execute(locator)
+                _ <- updateCounter.execute(encoded)
+                _ <- counterRef.set(encoded)
+              } yield locator
+            }
+          } yield locator
         }
       }
 
-      def findBy(shortName: String): F[Option[Locator]] = {
+      def findBy(decodedUrl: Long): F[Option[Locator]] = {
         postgres.use { (session: Session[F]) =>
           for {
             preparedQuery <- session.prepare(selectBy)
-            result <- preparedQuery.option(shortName)
+            result <- preparedQuery.option(decodedUrl)
           } yield result
         }
       }
@@ -61,20 +57,20 @@ object Locators {
 private object LocatorSQL {
 
   val locatorCodec: Codec[Locator] =
-    (uuid, varchar, varchar).tupled.imap {
-      case (id, short_name, original_name) => Locator(id, short_name, original_name)
-    } { locator => (locator.id, locator.shortName, locator.originalName) }
+    (uuid, int8, varchar).tupled.imap {
+      case (id, encoded, original_name) => Locator(id, encoded, original_name)
+    } { locator => (locator.id, locator.encoded, locator.originalName) }
 
   val insert: Command[Locator] =
     sql"""
-      INSERT INTO locators (id, short_name, original_name)
+      INSERT INTO locators (id, encoded, original_name)
       VALUES ($locatorCodec)
      """.command
 
-  val selectBy: Query[String, Locator] =
+  val selectBy: Query[Long, Locator] =
     sql"""
-      SELECT id, short_name, original_name FROM locators
-      WHERE short_name = $varchar
+      SELECT id, encoded, original_name FROM locators
+      WHERE encoded = $int8
      """.query(locatorCodec)
 
 
