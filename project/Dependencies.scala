@@ -11,17 +11,12 @@ object Dependencies {
     val logback = "1.5.16"
     val newtype = "0.4.4"
     val refined = "0.9.29"
-//    val doobie = "1.0.0-RC7"
-
-//    val skunk = "1.1.0-M3"
     val skunk = "0.6.3"
     val natchez = "0.3.7"
-
     val fs2 = "3.12.0-RC1"
-
-//    val postgre = "42.7.5"
     val organizeImports = "0.6.0"
-    val scalameta = "1.0.0"
+    val scalameta = "1.1.0"
+    val weaver = "0.8.4"
   }
 
   object Libraries {
@@ -64,6 +59,10 @@ object Dependencies {
 
     // Test
     val scalameta = "org.scalameta" %% "munit" % Ver.scalameta % Test
+
+    val weaverCats = "com.disneystreaming" %% "weaver-cats" % Ver.weaver
+    val weaverDiscipline = "com.disneystreaming" %% "weaver-discipline" % Ver.weaver
+    val weaverScalaCheck = "com.disneystreaming" %% "weaver-scalacheck" % Ver.weaver
 
     // Scalafix rules
     val organizeImports = "com.github.liancheng" %% "organize-imports" % Ver.organizeImports

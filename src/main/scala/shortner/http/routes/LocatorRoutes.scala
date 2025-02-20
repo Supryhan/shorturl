@@ -31,7 +31,7 @@ final case class LocatorRoutes[F[_] : Monad : Concurrent](locators: Locators[F])
       for {
         originalUrl <- req.as[Original]
         locator <- locators.create(originalUrl.name)
-        resp <- Ok(s"Processed Original. Generated: ${encode(locator.encoded)}")
+        resp <- Ok(s"{ 'short': '${encode(locator.encoded)}' }")
       } yield resp
 
     case req@POST -> Root / "decode" =>
@@ -39,7 +39,7 @@ final case class LocatorRoutes[F[_] : Monad : Concurrent](locators: Locators[F])
         encodedUrl <- req.as[Encoded]
         locatorOption <- locators.findBy(decode(encodedUrl.name))
         resp <- locatorOption match {
-          case Some(locator) => Ok(s"Processed Encoded. Result: ${locator.originalName}")
+          case Some(locator) => Ok(s"{ 'initial': '${locator.originalName}' }")
           case None => NotFound("Locator not found.")
         }
       } yield resp

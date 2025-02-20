@@ -27,6 +27,7 @@ object ApplicationResources {
         }
       }
 
+    //TODO: Split this config into: local, testing and prod
     def mkPostgreSqlResource(): SessionPool[F] =
       Session
         .pooled[F](

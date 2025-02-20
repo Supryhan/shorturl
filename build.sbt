@@ -30,19 +30,15 @@ lazy val root = project
       Libraries.http4sCirce,
       Libraries.log4catsCore,
       Libraries.log4catsSlf4j,
-      
-//      Libraries.doobieCore,
-//      Libraries.doobieHikari,
-//      Libraries.postgreSQL,
-      
       Libraries.skunkCore,
       Libraries.skunkCirce,
       Libraries.natchezCore,
-      
       Libraries.fs2,
-      
       Libraries.logback % Runtime,
       Libraries.scalameta,
+      Libraries.weaverCats,
+      Libraries.weaverDiscipline,
+      Libraries.weaverScalaCheck
     )
 
   )
