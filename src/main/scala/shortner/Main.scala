@@ -9,7 +9,7 @@ import org.typelevel.log4cats.{Logger, LoggerFactory}
 import shortner.appresources.ApplicationResources
 import shortner.modules.{HttpApi, Programs, Services}
 
-object Main extends IOApp.Simple {
+object Main extends IOApp.Simple:
 
   given loggerFactory: LoggerFactory[IO] = Slf4jFactory.create[IO]
 
@@ -36,4 +36,3 @@ object Main extends IOApp.Simple {
             .build
         }.useForever
   }
-}

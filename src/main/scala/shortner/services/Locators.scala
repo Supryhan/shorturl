@@ -10,15 +10,14 @@ import skunk.syntax.all.*
 
 import java.util.UUID
 
-trait Locators[F[_]] {
+trait Locators[F[_]]:
 
   def create(url: String): F[Locator]
 
   def findBy(shortName: Long): F[Option[Locator]]
+end Locators
 
-}
-
-object Locators {
+object Locators:
   def make[F[_] : Concurrent](postgres: Resource[F, Session[F]],
                               counterRef: Ref[F, Long]): Locators[F] =
     new Locators[F] {
@@ -52,9 +51,9 @@ object Locators {
         }
       }
     }
-}
+end Locators
 
-private object LocatorSQL {
+private object LocatorSQL:
 
   val locatorCodec: Codec[Locator] =
     (uuid, int8, varchar).tupled.imap {
@@ -72,6 +71,4 @@ private object LocatorSQL {
       SELECT id, encoded, original_name FROM locators
       WHERE encoded = $int8
      """.query(locatorCodec)
-
-
-}
+end LocatorSQL

@@ -2,7 +2,6 @@ package shortner.domain
 
 import java.util.UUID
 
-object locator {
+object locator:
 
   case class Locator(id: UUID, encoded: Long, originalName: String)
-}

@@ -1,6 +1,6 @@
 package shortner.utils
 
-object EncodeDecodeUtils {
+object EncodeDecodeUtils:
 
   private val alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
   private val base = alphabet.length
@@ -15,9 +15,8 @@ object EncodeDecodeUtils {
     if (encoded.isEmpty) alphabet.head.toString else encoded
   }
 
-  def decode(url: String): Long = {
+  def decode(url: String): Long =
     url.foldLeft(0L) { (acc, char) =>
       acc * base + alphabet.indexOf(char)
     }
-  }
-}
+end EncodeDecodeUtils

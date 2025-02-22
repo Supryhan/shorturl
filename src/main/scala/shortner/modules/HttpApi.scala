@@ -12,15 +12,14 @@ import shortner.http.routes.{LocatorRoutes, WelcomeRoutes, version}
 
 import scala.concurrent.duration.*
 
-object HttpApi {
+object HttpApi:
   def make[F[_] : Async](services: Services[F],
                          programs: Programs[F]): HttpApi[F] =
     new HttpApi[F](services, programs) {}
-
-}
+end HttpApi
 
 sealed abstract class HttpApi[F[_] : Async] private(services: Services[F],
-                                                    programs: Programs[F]) {
+                                                    programs: Programs[F]):
   given loggerFactory: LoggerFactory[F] = Slf4jFactory.create
 
   private val locatorRoutes = LocatorRoutes[F](services.locators).routes
@@ -48,4 +47,4 @@ sealed abstract class HttpApi[F[_] : Async] private(services: Services[F],
 
   val httpApp: HttpApp[F] = loggers(middleware(routes).orNotFound)
 
-}
+end HttpApi

@@ -1,10 +1,37 @@
 ## Application to make URL shorter
 
-### Usage
-
-This is a normal sbt project. You can compile code with `sbt compile`, run it with `sbt run`, and `sbt console` will start a Scala 3 REPL.
-
 This application is aimed to make URLs shorter
+
+## Usage
+### Launching application
+1. Run Postgres in docker
+2. Run Main.scala class
+
+### 1. Run Postgres in docker using docker-compose.yml
+Type command in console:
+
+`docker-compose up -d`
+
+this downloads and starts postgres and admin/page in docker containers.
+
+To login admin page:```http://localhost:5050/login?next=/browser/```, use ```login:password``` -- ```admin@admin.com:admin```
+
+On Dashboard click: `Create New Server`. As Name put: `UrlShortnerDbServer`. In Connection tab in field Host name/address put: `postgres`, port: `5432`, Username: `postgres`, Password: `password` and press `Save`.
+
+Please, then create two tables. To do that follow: Servers -> UrlShortnerDbServer -> Databases -> url-shortener-database -> Schemas -> public -> Tables.
+
+On Tables right-click -> Query Tool and copy-paste SQL script from file `tables.sql` so that it will create tables `locators` and `ref` in DB named `url-shortener-database` and then insert init record into table `ref` (see scripts). 
+
+To stop DB run command:
+
+`docker-compose down`
+
+### 2. To run BE user need to execut run method in Main.scala class
+
+After starting application, user must get logs that:
+(1) application configured and started;
+(2) Application connected to Postgres;
+(3) Ember-Server service bound to address: [::]:8080
 
 This BE application is planned to interact with FE application on these contracts:
 ### 1. To make URL shorter
@@ -68,19 +95,3 @@ fetch('http://localhost:8080/v1/api/decode/', {
 .then(text => console.log(text))
 .catch(error => console.error('Error:', error));
 ```
-
-## Launching application
-### Run command in console:
-
-`docker-compose up -d`
-
-this downloads and starts postgres and admin/page docker containers
-
-To login admin page:```http://localhost:5050/login```, use ```login:password``` -- ```admin@admin.com:admin```
-
-Please, create two tables `locators` and `ref` in DB named `mydatabase` (use scripts from file `tables.sql`) and then insert init record into table `ref` (see scripts). 
-
-### To stop DB run command:
-
-`docker-compose down`
-

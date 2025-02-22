@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres
     environment:
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: url-shortener-database
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     volumes:

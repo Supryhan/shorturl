@@ -16,7 +16,7 @@ sealed abstract class ApplicationResources[F[_]](val postgres: Resource[F, Sessi
                                                  val counterRef: Ref[F, Long]) {
 }
 
-object ApplicationResources {
+object ApplicationResources:
   def make[F[_] : Temporal : Console : Logger : Network](): Resource[F, ApplicationResources[F]] = {
 
 
@@ -35,7 +35,7 @@ object ApplicationResources {
           port = 5431,
           user = "postgres",
           password = Some("password"),
-          database = "mydatabase",
+          database = "url-shortener-database",
           max = 2
         ).evalTap(checkPostgresConnection)
 
@@ -52,4 +52,4 @@ object ApplicationResources {
       }
     }
   }
-}
+end ApplicationResources

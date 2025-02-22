@@ -9,15 +9,13 @@ import org.http4s.circe.*
 import org.http4s.dsl.Http4sDsl
 import org.http4s.dsl.io.*
 import org.http4s.server.Router
+import shortner.domain.encoded.Encoded
 import shortner.domain.locator.Locator
-import shortner.utils.EncodeDecodeUtils.*
+import shortner.domain.original.Original
 import shortner.services.Locators
+import shortner.utils.EncodeDecodeUtils.*
 
 final case class LocatorRoutes[F[_] : Monad : Concurrent](locators: Locators[F]) extends Http4sDsl[F] {
-
-  case class Original(name: String)
-
-  case class Encoded(name: String)
 
   given decoderOriginal: EntityDecoder[F, Original] = jsonOf[F, Original]
 
